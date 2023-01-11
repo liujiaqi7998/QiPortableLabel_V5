@@ -1,4 +1,5 @@
 -- 全局变量
+module(..., package.seeall)
 
+page_id = "home"
 
-page_id = 1

@@ -14,8 +14,8 @@ sys.taskInit(function()
     io.mount(io.SDCARD)
     axp173.init()
 
-    -- musicplayer.ReadFileTable()
-    -- musicplayer.showFileTable()
+    musicplayer.ReadFileTable()
+    musicplayer.showFileTable()
     -- axp173.setOutputEnable(axp173.OUTPUT_CHANNEL.OP_LDO4, true)
     -- disp.int()
 

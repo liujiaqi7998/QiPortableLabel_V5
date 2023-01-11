@@ -1,11 +1,13 @@
 module(..., package.seeall)
+require 'global_variable'
+require 'audio'
 
 page = 0
 music_table = {}
 
 -- 扫描音乐目录里面的所有歌曲，保存在列表，进入该模式后进行一次扫描即可
 function ReadFileTable()
-    page_id = nil
+    global_variable.page_id = ""
     if io.opendir("/sdcard0/music") then
         local m = 1
         while true do
@@ -23,7 +25,7 @@ function ReadFileTable()
 end
 
 function showFileTable()
-    page_id = nil
+    global_variable.page_id = ""
     axp173.setOutputEnable(axp173.OUTPUT_CHANNEL.OP_LDO4, true)
     disp.int()
     ----------------------------
@@ -55,27 +57,27 @@ function showFileTable()
     -----------------------------
     disp.sleep()
     axp173.setOutputEnable(axp173.OUTPUT_CHANNEL.OP_LDO4, false)
-    page_id = "MusicFileTable"
+    global_variable.page_id = "MusicFileTable"
 end
 
 function menu_keyMapping(id, islong)
     if id == 1 then
         if islong == true then
-            if page - 1 > 1 then
+            if page - 1 > 0 then
                 page = page - 1
                 showFileTable()
             else
                 -- 返回上一级菜单
             end
         else
-
+            music_play(1)
         end
     end
     if id == 2 then
-        -- body
+        music_play(2)
     end
     if id == 3 then
-        -- body
+        music_play(3)
     end
     if id == 4 then
         if islong == true then
@@ -84,7 +86,7 @@ function menu_keyMapping(id, islong)
                 showFileTable()
             end
         else
-
+            music_play(4)
         end
     end
 end
@@ -112,11 +114,11 @@ function player_keyMapping(id, islong)
 end
 
 function music_play(id)
-    page_id = nil
+    global_variable.page_id = ""
 
     local music_name = music_table[page * 4 + id]
 
-    audio.play(0, "FILE", "/sdcard0/music" .. music_name, audiocore.VOL3,
+    audio.play(0, "FILE", "/sdcard0/music/" .. music_name, audiocore.VOL3,
                function(result)
         sys.publish("AUDIO_PLAY_END result:" .. result)
     end, nil, nil)
@@ -142,5 +144,5 @@ function music_play(id)
     disp.sleep()
     axp173.setOutputEnable(axp173.OUTPUT_CHANNEL.OP_LDO4, false)
     
-    page_id = "MusicPlayer"
+    global_variable.page_id = "MusicPlayer"
 end
