@@ -2,8 +2,9 @@ module(..., package.seeall)
 require 'global_variable'
 require 'audio'
 
-page = 0
-music_table = {}
+local page = 0
+local music_table = {}
+local now_music_name = ""
 
 -- 扫描音乐目录里面的所有歌曲，保存在列表，进入该模式后进行一次扫描即可
 function ReadFileTable()
@@ -73,12 +74,8 @@ function menu_keyMapping(id, islong)
             music_play(1)
         end
     end
-    if id == 2 then
-        music_play(2)
-    end
-    if id == 3 then
-        music_play(3)
-    end
+    if id == 2 then music_play(2) end
+    if id == 3 then music_play(3) end
     if id == 4 then
         if islong == true then
             if page + 1 < (#music_table / 4) then
@@ -97,28 +94,48 @@ function player_keyMapping(id, islong)
         audio.stop(function(result)
             sys.publish("AUDIO_PLAY_END result:" .. result)
         end)
+        if islong == true then
+            -- 返回上一级菜单
+            now_music_name = ""
+            showFileTable()
+        end
     end
     if id == 2 then
         if voice_level < 7 then
-            voice_level =  voice_level + 1 
+            voice_level = voice_level + 1
             audio.setVolume(voice_level)
+            log.debug("音量增加",voice_level)
         end
     end
     if id == 3 then
         if voice_level > 0 then
-            voice_level =  voice_level - 1 
+            voice_level = voice_level - 1
             audio.setVolume(voice_level)
+            log.debug("音量减小",voice_level)
         end
     end
-    if id == 4 then end
+    if id == 4 then
+        
+        if now_music_name == "" then
+            log.error("播放错误","没有要播放的now_music_name")
+            return
+        end
+        audio.stop(function(result)
+            sys.publish("AUDIO_PLAY_END result:" .. result)
+        end)
+        audio.play(0, "FILE", "/sdcard0/music/" .. now_music_name, voice_level,
+                   function(result)
+            sys.publish("AUDIO_PLAY_END result:" .. result)
+        end, nil, nil)
+    end
 end
 
 function music_play(id)
     global_variable.page_id = ""
-
+    
     local music_name = music_table[page * 4 + id]
-
-    audio.play(0, "FILE", "/sdcard0/music/" .. music_name, audiocore.VOL3,
+    now_music_name = music_name
+    audio.play(0, "FILE", "/sdcard0/music/" .. music_name, audio.getVolume(),
                function(result)
         sys.publish("AUDIO_PLAY_END result:" .. result)
     end, nil, nil)
@@ -130,8 +147,9 @@ function music_play(id)
     disp.setcolor(0X00)
     disp.setfontheight(30)
     disp.puttext(common.utf8ToGb2312(music_name), 100, 100)
-    disp.puttext(common.utf8ToGb2312("按键:1停止,2音量加,3音量减"), 0,
-                 150)
+    disp.puttext(common.utf8ToGb2312(
+                     "按键:1停止,2音量加\n3音量减,4重新播放,长按1退出"),
+                 0, 180)
     disp.globalUpdate(0)
     -----------------------------
     disp.clear()
@@ -143,6 +161,6 @@ function music_play(id)
     -----------------------------
     disp.sleep()
     axp173.setOutputEnable(axp173.OUTPUT_CHANNEL.OP_LDO4, false)
-    
+
     global_variable.page_id = "MusicPlayer"
 end

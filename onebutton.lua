@@ -73,7 +73,7 @@ sys.timerLoopStart(function()
         button_callback(4, false)
         return
     end
-end, 100)
+end, 50)
 
 function reset_button()
     button1 = 0
