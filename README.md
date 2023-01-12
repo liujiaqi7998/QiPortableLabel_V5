@@ -1,0 +1,5 @@
+# 小奇智能便签
+
+菜单主要采用回调方式
+
+就是button_callback根据global_variable里面的page_id判断是哪个菜单，并指向相应模块的按钮回调函数。
