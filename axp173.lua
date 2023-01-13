@@ -101,15 +101,17 @@ function _getMid(input, min, max) return _getMax(_getMin(input, max), min) end
 ]]
 function setOutputEnable(channel, state)
     local buff = string.byte(i2c.read(i2cid, 0x12, 1))
+    local txt = "Disable"
     if state == true then
         -- buff | (1U << channel)
         buff = bit.bor(buff, bit.lshift(1, channel))
+        txt = "Enable"
     else
         -- buff & ~(1U << channel)
         buff = (bit.band(buff, bit.bnot(bit.lshift(1, channel))))
     end
     i2c.write(i2cid, 0x12, buff)
-    print("Change Output Enable finish")
+    log.info("axp173", "channel "..channel.."Change Output ".. txt .." finish")
 end
 
 --[[
