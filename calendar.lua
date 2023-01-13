@@ -7,8 +7,8 @@ function calendar_keyMapping(id, islong)
     if id == 1 then
         -- 上级菜单
     end
-    if id == 3 then if page - 1 >= 1 then page = page - 1 end end
-    if id == 4 then if page + 1 <= 12 then page = page + 1 end end
+    if id == 3 then if page - 1 >= 1 then page = page - 1 ShowCalendar() end  end
+    if id == 4 then if page + 1 <= 12 then page = page + 1 ShowCalendar()end end
 end
 
 function ShowCalendar()
