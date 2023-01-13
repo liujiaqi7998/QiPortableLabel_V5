@@ -2,6 +2,8 @@ require 'global_variable'
 require 'pins'
 require 'sys'
 require 'musicplayer'
+require 'ebook'
+require 'calendar'
 
 local button1 = 0
 local button2 = 0
@@ -96,6 +98,20 @@ function button_callback(id, islong)
             musicplayer.menu_keyMapping(id, islong)
             return
         end
+        if global_variable.page_id == "BookFileTable" then
+            ebook.menu_keyMapping(id, islong)
+            return
+        end
+        if global_variable.page_id == "ReadBook" then
+            ebook.reader_keyMapping(id, islong)
+            return
+        end
+        if global_variable.page_id == "ShowCalendar" then
+            calendar.calendar_keyMapping(id, islong)
+            return
+        end
+        
+        
     end)
 
 end

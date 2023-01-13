@@ -1,27 +1,27 @@
 module(..., package.seeall)
 require 'global_variable'
-require 'audio'
 
 local page = 0
-local music_table = {}
-local now_music_name = ""
-
--- 扫描音乐目录里面的所有歌曲，保存在列表，进入该模式后进行一次扫描即可
+local book_table = {}
+local now_book_id = 1
+local now_book_name = ""
+local book_page = 0 -- 当前电子书页码
+-- 扫描电子书目录里面的所有书，保存在列表，进入该模式后进行一次扫描即可
 function ReadFileTable()
     global_variable.page_id = ""
-    if io.opendir("/sdcard0/music") then
+    if io.opendir("/sdcard0/book") then
         local m = 1
         while true do
             local fType, fName, fSize = io.readdir()
             if fType == 32 then
                 log.debug("sd card file", fName, fSize)
-                music_table[m] = fName
+                book_table[m] = fName
             elseif fType == nil then
                 break
             end
             m = m + 1
         end
-        io.closedir("/sdcard0/music")
+        io.closedir("/sdcard0/book")
     end
 end
 
@@ -33,16 +33,16 @@ function showFileTable()
     disp.clear()
     disp.setcolor(0X00)
     disp.setfontheight(30)
-    disp.puttext(common.utf8ToGb2312("播放SD卡音乐"), 10, 0)
+    disp.puttext(common.utf8ToGb2312("电子书列表"), 10, 0)
     -- 遍历读取sd目录
 
     for i = 1, 4 do
-        local name = music_table[page * 4 + i]
+        local name = book_table[page * 4 + i]
 
         if name == nil then
             break
         else
-            log.info("music", name)
+            log.info("book", name)
             disp.puttext(common.utf8ToGb2312(i .. "." .. name), 10, i * 40)
         end
     end
@@ -58,7 +58,7 @@ function showFileTable()
     -----------------------------
     disp.sleep()
     axp173.setOutputEnable(axp173.OUTPUT_CHANNEL.OP_LDO4, false)
-    global_variable.page_id = "MusicFileTable"
+    global_variable.page_id = "BookFileTable"
 end
 
 function menu_keyMapping(id, islong)
@@ -71,95 +71,89 @@ function menu_keyMapping(id, islong)
                 -- 返回上一级菜单
             end
         else
-            music_play(1)
+            now_book_id = 1
+            ReadBook()
         end
     end
-    if id == 2 then music_play(2) end
-    if id == 3 then music_play(3) end
+    if id == 2 then
+        now_book_id = 2
+        ReadBook()
+    end
+    if id == 3 then
+        now_book_id = 2
+        ReadBook()
+    end
     if id == 4 then
         if islong == true then
-            if page + 1 < (#music_table / 4) then
+            if page + 1 < (#book_table / 4) then
                 page = page + 1
                 showFileTable()
             end
         else
-            music_play(4)
+            now_book_id = 4
+            ReadBook()
         end
     end
 end
 
-function player_keyMapping(id, islong)
-    local voice_level = audio.getVolume()
+function reader_keyMapping(id, islong)
+    local book_size = io.fileSize("/sdcard0/book/" .. now_book_name)
     if id == 1 then
-        audio.stop(function(result)
-            sys.publish("AUDIO_PLAY_END result:" .. result)
-        end)
         if islong == true then
             -- 返回上一级菜单
-            now_music_name = ""
+            now_book_name = ""
+            book_page = 0
             showFileTable()
+        else
+            if (book_page - 1)* 170 >= 0 then
+                book_page = book_page + 1
+                ReadBook()
+            end
         end
     end
     if id == 2 then
-        if voice_level < 7 then
-            voice_level = voice_level + 1
-            audio.setVolume(voice_level)
-            log.debug("音量增加",voice_level)
+        if (book_page + 1)* 170 <= book_size then
+            book_page = book_page + 1
+            ReadBook()
         end
     end
     if id == 3 then
-        if voice_level > 0 then
-            voice_level = voice_level - 1
-            audio.setVolume(voice_level)
-            log.debug("音量减小",voice_level)
+        if (book_page - 10)* 170 >= 0 then
+            book_page = book_page + 1
+            ReadBook()
         end
     end
     if id == 4 then
-        
-        if now_music_name == "" then
-            log.error("播放错误","没有要播放的now_music_name")
-            return
+        if (book_page + 10)* 170 <= book_size then
+            book_page = book_page + 10
+            ReadBook()
         end
-        audio.stop(function(result)
-            sys.publish("AUDIO_PLAY_END result:" .. result)
-        end)
-        audio.play(0, "FILE", "/sdcard0/music/" .. now_music_name, voice_level,
-                   function(result)
-            sys.publish("AUDIO_PLAY_END result:" .. result)
-        end, nil, nil)
     end
 end
 
-function music_play(id)
+function ReadBook()
     global_variable.page_id = ""
-    
-    local now_music_name = music_table[page * 4 + id]
-    audio.play(0, "FILE", "/sdcard0/music/" .. now_music_name, audio.getVolume(),
-               function(result)
-        sys.publish("AUDIO_PLAY_END result:" .. result)
-    end, nil, nil)
+    now_book_name = book_table[page * 4 + now_book_id]
+    local fileStr = io.readStream("/sdcard0/book/" .. now_book_name,
+                                  book_page * 170 , 170)
 
     axp173.setOutputEnable(axp173.OUTPUT_CHANNEL.OP_LDO4, true)
     disp.int()
     ----------------------------
     disp.clear()
     disp.setcolor(0X00)
-    disp.setfontheight(30)
-    disp.puttext(common.utf8ToGb2312(now_music_name), 100, 100)
-    disp.puttext(common.utf8ToGb2312(
-                     "按键:1停止,2音量加\n3音量减,4重新播放,长按1退出"),
-                 0, 180)
+    disp.setfontheight(25)
+    -- 可以显示170个字符
+    disp.puttext(fileStr, 0, 12)
+
     disp.globalUpdate(0)
     -----------------------------
     disp.clear()
-    disp.setcolor(0X00)
-    disp.setfontheight(30)
-    disp.puttext(common.utf8ToGb2312("正在播放音乐"), 100, 50)
     disp.globalUpdate(1)
     disp.show()
     -----------------------------
     disp.sleep()
     axp173.setOutputEnable(axp173.OUTPUT_CHANNEL.OP_LDO4, false)
 
-    global_variable.page_id = "MusicPlayer"
+    global_variable.page_id = "ReadBook"
 end
