@@ -92,7 +92,7 @@ function player_keyMapping(id, islong)
     local voice_level = audio.getVolume()
     if id == 1 then
         audio.stop(function(result)
-            sys.publish("AUDIO_PLAY_END result:" .. result)
+            --sys.publish("AUDIO_PLAY_END result:" .. result)
         end)
         if islong == true then
             -- 返回上一级菜单
@@ -121,11 +121,11 @@ function player_keyMapping(id, islong)
             return
         end
         audio.stop(function(result)
-            sys.publish("AUDIO_PLAY_END result:" .. result)
+            --sys.publish("AUDIO_PLAY_END result:" .. result)
         end)
         audio.play(0, "FILE", "/sdcard0/music/" .. now_music_name, voice_level,
                    function(result)
-            sys.publish("AUDIO_PLAY_END result:" .. result)
+            --sys.publish("AUDIO_PLAY_END result:" .. result)
         end, nil, nil)
     end
 end
@@ -136,7 +136,7 @@ function music_play(id)
     local now_music_name = music_table[page * 4 + id]
     audio.play(0, "FILE", "/sdcard0/music/" .. now_music_name, audio.getVolume(),
                function(result)
-        sys.publish("AUDIO_PLAY_END result:" .. result)
+        --sys.publish("AUDIO_PLAY_END result:" .. result)
     end, nil, nil)
 
     axp173.setOutputEnable(axp173.OUTPUT_CHANNEL.OP_LDO4, true)
