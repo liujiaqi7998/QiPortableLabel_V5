@@ -25,7 +25,7 @@ sys.taskInit(function()
     if handle == false then
         return
     end
-
+    -- WS2812.init(10)
     
     -- local buff = zbuff.create({8,8,24})
     -- buff:drawLine(1,2,5,6,0x00ffff)
@@ -38,7 +38,7 @@ sys.taskInit(function()
     -- musicplayer.showFileTable()
     -- axp173.setOutputEnable(axp173.OUTPUT_CHANNEL.OP_LDO4, true)
     -- disp.int()
-    
+
     -- disp.clear()
     -- -- disp.drawrect(0, 0, 30, 60, 0x00)
     -- disp.setcolor(0X00)
@@ -58,13 +58,15 @@ sys.taskInit(function()
     
 
     while true do
-        WS2812.ShowOneFrame("123456781234567812345678")
+        m = WS2812.SendOneFrame(10,"123456781234567812345678")
+        print(m)
         -- mmmm(1)
         log.info("OK")
         sys.wait(1000)
         -- mmmm(0)
-
-        WS2812.ShowOneFrame("\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00")
+        
+        m = WS2812.SendOneFrame(10,"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00")
+        print(m)
         sys.wait(1000)
         -- getGpio10Fnc(1)
         -- getGpio10Fnc(0)
