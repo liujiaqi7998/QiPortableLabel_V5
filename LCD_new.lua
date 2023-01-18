@@ -14,15 +14,7 @@ pmd.ldoset(15, pmd.LDO_VLCD)
 
 -- 引脚初始化
 local GpioResetFnc = pins.setup(pio.P0_11, 0) -- Reset引脚初始化
-
-function GpioBusyIntFnc(msg)
-    --下降沿中断时：msg为cpu.INT_GPIO_NEGEDGE
-    if msg==cpu.INT_GPIO_NEGEDGE then
-        sys.publish("LCD_Busy_Release")
-    end
-end
-local GpioBusyFnc = pins.setup(pio.P0_4,GpioBusyIntFnc,pio.PULLDOWN) -- Busy引脚初始化
-
+local GpioBusyFnc = pins.setup(pio.P0_4, 0) -- Busy引脚初始化
 
 -- LCD初始化用数组
 local para = {
@@ -50,10 +42,9 @@ local para = {
 ]]
 disp.ReadBusy = function()
     log.debug("e-Paper busy")
-    -- while (GpioBusyFnc() == 0) do
-    --     sys.wait(50) -- DelayMs 50 
-    -- end
-    sys.waitUntil("LCD_Busy_Release")
+    while (GpioBusyFnc() == 0) do
+        sys.wait(100) -- DelayMs 100 
+    end
     log.debug("e-Paper busy release")
 end
 
