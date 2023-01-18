@@ -14,20 +14,32 @@ pmd.ldoset(15, pmd.LDO_VLCD)
 
 -- 引脚初始化
 local GpioResetFnc = pins.setup(pio.P0_11, 0) -- Reset引脚初始化
-local GpioBusyFnc = pins.setup(pio.P0_4, 0) -- Busy引脚初始化
+
+function GpioBusyIntFnc(msg)
+    --下降沿中断时：msg为cpu.INT_GPIO_NEGEDGE
+    if msg==cpu.INT_GPIO_NEGEDGE then
+        sys.publish("LCD_Busy_Release")
+    end
+end
+local GpioBusyFnc = pins.setup(pio.P0_4,GpioBusyIntFnc,pio.PULLDOWN) -- Busy引脚初始化
+
 
 -- LCD初始化用数组
 local para = {
     width = 400, -- 分辨率宽      度，400像素；用户根据屏的参数自行修改
     height = 300, -- 分辨率高度，300像素；用户根据屏的参数自行修改
     bpp = 1, -- 位深度，1表示单色。单色屏就设置为1，不可修改
+    bus = disp.BUS_SPI4LINE, -- led位标准SPI接口，不可修改
     xoffset = 0, -- X轴偏移
     yoffset = 0, -- Y轴偏移
     freq = 110000, -- 9000000 9M spi时钟频率，支持110K到13M（即110000到13000000）之间的整数（包含110000和13000000）
     hwfillcolor = 0xff, -- 填充色，白色
     pinrst = pio.P0_6, -- reset，复位引脚
     pinrs = pio.P0_1, -- DC，命令/数据选择引脚
-    initcmd = {}
+    initcmd = {0x00}, --初始化命令
+    sleepcmd = {0x00}, --休眠命令
+    wakecmd = {0x00} --唤醒命令
+
 }
 
 --[[
@@ -38,9 +50,10 @@ local para = {
 ]]
 disp.ReadBusy = function()
     log.debug("e-Paper busy")
-    while (GpioBusyFnc() == 0) do
-        sys.wait(50) -- DelayMs 50 
-    end
+    -- while (GpioBusyFnc() == 0) do
+    --     sys.wait(50) -- DelayMs 50 
+    -- end
+    sys.waitUntil("LCD_Busy_Release")
     log.debug("e-Paper busy release")
 end
 

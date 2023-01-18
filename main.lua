@@ -17,7 +17,7 @@ local getGpio10Fnc = pins.setup(pio.P0_10, 1, pio.PULLUP)
 
 sys.taskInit(function()
     -- 挂载 SD 卡
-    io.mount(io.SDCARD)
+    --io.mount(io.SDCARD)
     -- 初始化 axp173 芯片
     axp173.init()
     -- 挂载小奇的 WS2812 库
@@ -36,24 +36,24 @@ sys.taskInit(function()
     -- ebook.showFileTable()
     -- musicplayer.ReadFileTable()
     -- musicplayer.showFileTable()
-    -- axp173.setOutputEnable(axp173.OUTPUT_CHANNEL.OP_LDO4, true)
-    -- disp.int()
+    axp173.setOutputEnable(axp173.OUTPUT_CHANNEL.OP_LDO4, true)
+    disp.int()
 
-    -- disp.clear()
-    -- -- disp.drawrect(0, 0, 30, 60, 0x00)
-    -- disp.setcolor(0X00)
-    -- disp.setfontheight(25)
-    -- disp.puttext(common.utf8ToGb2312("一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十"),0, 12)
-    -- disp.globalUpdate(0)
-    -- -- disp.WeatherglobalUpdate(0,"/lua/out.bin")
+    disp.clear()
+    -- disp.drawrect(0, 0, 30, 60, 0x00)
+    disp.setcolor(0X00)
+    disp.setfontheight(25)
+    disp.puttext(common.utf8ToGb2312("一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十"),0, 12)
+    disp.globalUpdate(0)
+    -- disp.WeatherglobalUpdate(0,"/lua/out.bin")
 
-    -- disp.clear()
-    -- -- disp.drawrect(0, 0, 30, 60, 0x00)
-    -- disp.globalUpdate(1)
+    disp.clear()
+    -- disp.drawrect(0, 0, 30, 60, 0x00)
+    disp.globalUpdate(1)
 
-    -- disp.show()
-    -- disp.sleep()
-    -- axp173.setOutputEnable(axp173.OUTPUT_CHANNEL.OP_LDO4, false)
+    disp.show()
+    disp.sleep()
+    axp173.setOutputEnable(axp173.OUTPUT_CHANNEL.OP_LDO4, false)
 
     
 
