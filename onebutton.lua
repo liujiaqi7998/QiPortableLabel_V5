@@ -12,8 +12,8 @@ local button4 = 0
 local short_times = 2
 local long_times = 8
 local getGpio5Fnc = pins.setup(pio.P0_5, 1, pio.PULLUP)
-local getGpio17Fnc = pins.setup(pio.P0_17, 1, pio.PULLUP)
-local getGpio16Fnc = pins.setup(pio.P0_18, 1, pio.PULLUP)
+local getGpio17Fnc = pins.setup(pio.P0_18, 1, pio.PULLUP) 
+local getGpio16Fnc = pins.setup(pio.P0_17, 1, pio.PULLUP)
 local getGpio9Fnc = pins.setup(pio.P0_9, 1, pio.PULLUP)
 
 sys.timerLoopStart(function()

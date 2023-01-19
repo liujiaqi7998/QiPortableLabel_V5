@@ -8,6 +8,16 @@
 --
 module(..., package.seeall)
 
+-- function IRQFnc(msg)
+--     log.info("getIRQFnc.gpio13IntFnc",msg,getIRQFnc())
+--     --上升沿中断时：msg为cpu.INT_GPIO_POSEDGE；下降沿中断时：msg为cpu.INT_GPIO_NEGEDGE
+--     if msg==cpu.INT_GPIO_NEGEDGE then
+--         log.info("getIRQFnc INT msg")
+--     else
+--     end
+-- end
+-- getIRQFnc = pins.setup(pio.P0_12,IRQFnc,pio.PULLUP)
+
 OUTPUT_CHANNEL = {
     OP_DCDC1 = 0,
     OP_LDO4 = 1,

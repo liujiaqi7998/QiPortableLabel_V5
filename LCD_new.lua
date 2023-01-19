@@ -8,6 +8,7 @@
 --
 require 'sys'
 require "pins"
+require 'Light'
 
 -- VLCD电压域配置
 pmd.ldoset(15, pmd.LDO_VLCD)
@@ -21,7 +22,7 @@ local para = {
     width = 400, -- 分辨率宽      度，400像素；用户根据屏的参数自行修改
     height = 300, -- 分辨率高度，300像素；用户根据屏的参数自行修改
     bpp = 1, -- 位深度，1表示单色。单色屏就设置为1，不可修改
-    bus = disp.BUS_SPI4LINE, -- led位标准SPI接口，不可修改
+    bus = disp.BUS_SPI4LINE, -- lcd位标准SPI接口，不可修改
     xoffset = 0, -- X轴偏移
     yoffset = 0, -- Y轴偏移
     freq = 110000, -- 9000000 9M spi时钟频率，支持110K到13M（即110000到13000000）之间的整数（包含110000和13000000）
@@ -71,6 +72,8 @@ end
 返回值：无
 ]]
 disp.int = function()
+    Light.show(0,0,255)
+    sys.wait(10)
     log.debug("e-Paper init")
     disp.init(para) -- 初始化LCD参数
     disp.clear() -- 清除缓存
@@ -160,6 +163,11 @@ disp.sleep = function()
     disp.ReadBusy();
     GpioResetFnc(0) -- 拉低复位引脚
     GpioBusyFnc(0) -- 拉低忙引脚
+
+    -- 关闭LED
+    Light.close()
+    Light.close()
+    sys.wait(10)
 end
 
 --[[

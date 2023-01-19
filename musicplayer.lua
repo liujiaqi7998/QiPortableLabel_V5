@@ -133,7 +133,7 @@ end
 function music_play(id)
     global_variable.page_id = ""
     
-    local now_music_name = music_table[page * 4 + id]
+    now_music_name = music_table[page * 4 + id]
     audio.play(0, "FILE", "/sdcard0/music/" .. now_music_name, audio.getVolume(),
                function(result)
         --sys.publish("AUDIO_PLAY_END result:" .. result)
