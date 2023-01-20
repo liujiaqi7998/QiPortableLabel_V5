@@ -1,6 +1,8 @@
 --
 module(..., package.seeall)
 
+local getGpio10Fnc = pins.setup(pio.P0_10, 1, pio.PULLUP)
+
 local mode = 0
 local close_str = string.rep("\x00", 24)
 

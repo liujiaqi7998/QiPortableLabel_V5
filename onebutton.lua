@@ -110,7 +110,10 @@ function button_callback(id, islong)
             calendar.calendar_keyMapping(id, islong)
             return
         end
-        
+        if global_variable.page_id == "MainMenu" then
+            main_menu_keyMapping(id, islong)
+            return
+        end
         
     end)
 

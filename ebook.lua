@@ -69,6 +69,7 @@ function menu_keyMapping(id, islong)
                 showFileTable()
             else
                 -- 返回上一级菜单
+                show_menu()
             end
         else
             now_book_id = 1

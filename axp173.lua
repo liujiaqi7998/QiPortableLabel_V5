@@ -316,10 +316,16 @@ end
 -- inline uint32_t AXP173::getCoulometerChargeData() {
 --     return _I2C_read32Bit(0xB0);
 -- }
+function getCoulometerChargeData()
+    return string.byte(i2c.read(i2cid, 0xB0, 4))
+end
 
 -- inline uint32_t AXP173::getCoulometerDischargeData() {
 --     return _I2C_read32Bit(0xB4);
 -- }
+function getCoulometerDischargeData()
+    return string.byte(i2c.read(i2cid, 0xB4, 4))
+end
 
 -- float AXP173::getCoulometerData() {
 --     uint32_t coin = getCoulometerChargeData();
@@ -327,3 +333,20 @@ end
 --     // data = 65536 * current_LSB * (coin - coout) / 3600 / ADC rate
 --     return 65536 * 0.5 * (int32_t)(coin - coout) / 3600.0 / 25.0;
 -- }
+
+function getCoulometerData()
+    local coin = getCoulometerChargeData()
+    local coout = getCoulometerDischargeData()
+    -- data = 65536 * current_LSB * (coin - coout) / 3600 / ADC rate
+    return 65536 * 0.5 * (coin - coout) / 3600.0 / 25.0
+end
+
+-- float AXP173::getBatVoltage() {
+--     float ADCLSB = 1.1 / 1000.0;
+--     return _I2C_read12Bit(0x78) * ADCLSB;
+-- }
+
+function getBatVoltage()
+    local ADCLSB = 1.1 / 1000.0;
+    return string.byte(i2c.read(i2cid, 0x78, 2)) * ADCLSB
+end

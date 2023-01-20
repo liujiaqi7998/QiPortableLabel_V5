@@ -180,7 +180,7 @@ disp.BINglobalUpdate = function(color, uri)
     log.debug("e-Paper globalUpdate by .bin")
     if io.exists(uri) == false then
         log.info("file not exists", uri)
-        uri = "/lua/file_bad_img.bin"
+        uri = "/lua/pic_bin/file_bad_img.bin"
     end
     if color == 1 then
         -- 切换红色缓存区
@@ -213,7 +213,7 @@ disp.WeatherglobalUpdate = function(color, uri)
     log.debug("e-Paper globalUpdate by .bin")
     if io.exists(uri) == false then
         log.info("file not exists", uri)
-        uri = "/lua/file_bad_img.bin"
+        uri = "/lua/pic_bin/file_bad_img.bin"
     end
     if color == 1 then
         -- 切换红色缓存区
