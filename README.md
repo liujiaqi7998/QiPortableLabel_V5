@@ -8,6 +8,8 @@
 
 B站视频：[用墨水屏制作小手机？小奇智能便签_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1yP4y1z7x4/)
 
+PCB：[小奇智能便签 - 嘉立创EDA开源硬件平台 (oshwhub.com)](https://oshwhub.com/liujiaqi/qiportablelabel_v7)
+
 这是一款搭载4G模块的智能墨水屏显示卡，采用Luat编程开发，支持多种功能。
 
 目前产品处于迭代更新状态，还有许多BUG，我会不定期更新程序。
