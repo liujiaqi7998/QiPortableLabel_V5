@@ -350,3 +350,17 @@ function getBatVoltage()
     local ADCLSB = 1.1 / 1000.0;
     return string.byte(i2c.read(i2cid, 0x78, 2)) * ADCLSB
 end
+
+-- float AXP173::getAXP173Temp() {
+--     float ADCLSB = 0.1;
+--     const float OFFSET_DEG_C = -144.7;
+--     uint16_t ReData = _I2C_read12Bit(0x5E);
+--     return OFFSET_DEG_C + ReData * ADCLSB;
+-- }
+
+function getAXP173Temp()
+    local ADCLSB = 0.1;
+    local OFFSET_DEG_C = -144.7;
+    local ReData = string.byte(i2c.read(i2cid, 0x5E, 2))
+    return OFFSET_DEG_C + ReData * ADCLSB
+end

@@ -209,11 +209,102 @@ end
 参数  ：无
 返回值：无
 ]]
+-- disp.WeatherglobalUpdate = function(color, Weather)
+--     log.debug("e-Paper globalUpdate by Weather")
+--     -- if io.exists(uri) == false then
+--     --     log.info("file not exists", uri)
+--     --     uri = "/lua/pic_bin/file_bad_img.bin"
+--     -- end
+--     -- if color == 1 then
+--     --     -- 切换红色缓存区
+--     --     disp.write(0x00020013)
+--     -- else
+--     --     -- 切换黑色缓存区
+--     --     disp.write(0x00020010)
+--     -- end
+--     -- local fileIn = io.open(uri, "rb")
+--     -- local content = fileIn:read("*all")
+--     -- local length = fileIn:seek("end")
+--     -- fileIn:close()
+
+--     if #Weather < 5000 then
+--         log.error("e-Paper WeatherglobalUpdate length small")
+--         return
+--     end
+
+--     for j = 1, 2500 do
+--         if color == 0 then
+--             -- 切换黑色缓存区
+--             disp.write(0x000300ff)
+--         else
+--             disp.write(0x00030000)
+--         end
+--     end
+
+--     local kk = 1
+--     for i = 1, 200 do
+--         for j = 1, 13 do
+--             if color == 0 then
+--                 -- 切换黑色缓存区
+--                 disp.write(0x000300ff)
+--             else
+--                 disp.write(0x00030000)
+--             end
+--         end
+
+--         for j = 1, 25 do
+--             local out = tonumber(string.byte(Weather, kk, kk))
+--             -- return ((num & 0x01) << 7) | ((num & 0x02) << 5) | ((num & 0x04) << 3) | ((num & 0x08) << 1) |
+--             --    ((num & 0x10) >> 1) | ((num & 0x20) >> 3) | ((num & 0x40) >> 5) | ((num & 0x80) >> 7);
+--             out = bit.bor(bit.lshift(bit.band(out, 0x01), 7),
+--                           bit.lshift(bit.band(out, 0x02), 5),
+--                           bit.lshift(bit.band(out, 0x04), 3),
+--                           bit.lshift(bit.band(out, 0x08), 1),
+--                           bit.rshift(bit.band(out, 0x10), 1),
+--                           bit.rshift(bit.band(out, 0x20), 3),
+--                           bit.rshift(bit.band(out, 0x40), 5),
+--                           bit.rshift(bit.band(out, 0x80), 7))
+--             if color == 0 then
+--                 -- 切换黑色缓存区
+--                 out = 255 - out
+--             end
+--             disp.write(0x00030000 + out)
+--             kk = kk + 1
+
+--         end
+
+--         for j = 1, 12 do
+--             if color == 0 then
+--                 -- 切换黑色缓存区
+--                 disp.write(0x000300ff)
+--             else
+--                 disp.write(0x00030000)
+--             end
+--         end
+--     end
+
+--     for j = 1, 2500 do
+--         if color == 0 then
+--             -- 切换黑色缓存区
+--             disp.write(0x000300ff)
+--         else
+--             disp.write(0x00030000)
+--         end
+--     end
+
+-- end
+
+--[[
+函数名：WeatherglobalUpdate
+功能  ：显示天气文件
+参数  ：无
+返回值：无
+]]
 disp.WeatherglobalUpdate = function(color, uri)
     log.debug("e-Paper globalUpdate by .bin")
     if io.exists(uri) == false then
         log.info("file not exists", uri)
-        uri = "/lua/pic_bin/file_bad_img.bin"
+        uri = "/lua/file_bad_img.bin"
     end
     if color == 1 then
         -- 切换红色缓存区
